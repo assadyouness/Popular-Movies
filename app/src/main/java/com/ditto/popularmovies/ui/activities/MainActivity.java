@@ -1,10 +1,12 @@
-package com.ditto.popularmovies;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.ditto.popularmovies.ui.activities;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.ditto.popularmovies.R;
+
+public class MainActivity extends BaseActivity {
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
