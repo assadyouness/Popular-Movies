@@ -15,6 +15,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -26,6 +30,7 @@ dependencies {
     def rxjava_version = '2.1.1'
     def rxcalladapter_version = '2.5.0'
     def reactivestreams_version = "1.1.1"
+    def butterknife_version = "10.1.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -34,6 +39,7 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
     implementation "android.arch.lifecycle:extensions:2.0.0"
+    implementation 'androidx.cardview:cardview:1.0.0'
     implementation "com.google.android.material:material:1.1.0-alpha06"
 
     //retrofit
@@ -64,4 +70,8 @@ dependencies {
 
     // Reactive Streams (convert Observable to LiveData)
     implementation "android.arch.lifecycle:reactivestreams:$reactivestreams_version"
+
+    //Butterknife
+    implementation "com.jakewharton:butterknife:$butterknife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
 }

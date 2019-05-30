@@ -30,7 +30,7 @@ public class AppModule {
     @Provides
     static RequestOptions provideRequestOptions(){
         return RequestOptions
-                .placeholderOf(R.drawable.white_background)
+                .centerCropTransform()
                 .error(R.drawable.white_background);
     }
 
