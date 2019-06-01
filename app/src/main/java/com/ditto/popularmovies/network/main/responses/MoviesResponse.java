@@ -16,6 +16,10 @@ public class MoviesResponse {
     @SerializedName(("page"))
     private int page;
 
+    @Expose
+    @SerializedName(("total_pages"))
+    private int totalPages;
+
     private boolean isError = false;
 
     public List<Movie> getMovies() {
@@ -32,5 +36,9 @@ public class MoviesResponse {
 
     public boolean isError() {
         return isError;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
     }
 }

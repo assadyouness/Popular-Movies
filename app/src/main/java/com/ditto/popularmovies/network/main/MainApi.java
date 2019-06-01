@@ -8,6 +8,6 @@ import retrofit2.http.Query;
 public interface MainApi {
 
     @GET("movie/popular")
-    Flowable<MoviesResponse> getPopularMovies(@Query("api_key") String apiKey);
+    Flowable<MoviesResponse> getPopularMovies(@Query("api_key") String apiKey,@Query("page") int page);
 
 }

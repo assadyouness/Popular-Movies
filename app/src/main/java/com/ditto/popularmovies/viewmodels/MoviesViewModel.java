@@ -18,6 +18,7 @@ public class MoviesViewModel extends ViewModel {
 
     private static final String TAG = "MoviesViewModel";
 
+    private int pageIndex = 1;
     // inject
     private final MainApi mainApi;
 
@@ -26,41 +27,50 @@ public class MoviesViewModel extends ViewModel {
     @Inject
     public MoviesViewModel(MainApi mainApi) {
         this.mainApi = mainApi;
+        movies = new MediatorLiveData<>();
     }
 
+
     public LiveData<Resource<MoviesResponse>> observeMovies(){
-        if(movies == null){
-            movies = new MediatorLiveData<>();
-            movies.setValue(Resource.loading(null));
-
-            final LiveData<Resource<MoviesResponse>> source = LiveDataReactiveStreams.fromPublisher(
-
-                    mainApi.getPopularMovies(Constants.API_KEY)
-                            .onErrorReturn(throwable -> {
-                                Log.e(TAG, "apply: ", throwable);
-                                MoviesResponse moviesResponse = new MoviesResponse();
-                                moviesResponse.setError(true);
-                                return moviesResponse;
-                            })
-
-                            .map((Function<MoviesResponse, Resource<MoviesResponse>>) moviesResponse -> {
-
-                                if(moviesResponse.isError()){
-                                    return Resource.error("Something went wrong", null);
-                                }
-
-                                return Resource.success(moviesResponse);
-                            })
-
-                            .subscribeOn(Schedulers.io())
-            );
-
-            movies.addSource(source, moviesResponseResource -> {
-                movies.setValue(moviesResponseResource);
-                movies.removeSource(source);
-            });
-        }
         return movies;
+    }
+
+    public void getMoreMovies() {
+
+        if(pageIndex == 1) {
+            movies.setValue(Resource.loading(null));
+        }
+
+        final LiveData<Resource<MoviesResponse>> source = LiveDataReactiveStreams.fromPublisher(
+
+                mainApi.getPopularMovies(Constants.API_KEY, pageIndex)
+                        .onErrorReturn(throwable -> {
+                            Log.e(TAG, "apply: ", throwable);
+                            MoviesResponse moviesResponse = new MoviesResponse();
+                            moviesResponse.setError(true);
+                            return moviesResponse;
+                        })
+
+                        .map((Function<MoviesResponse, Resource<MoviesResponse>>) moviesResponse -> {
+
+                            if (moviesResponse.isError()) {
+                                return Resource.error("Something went wrong", null);
+                            }
+                            else {
+                                pageIndex++;
+                            }
+
+                            return Resource.success(moviesResponse);
+                        })
+
+                        .subscribeOn(Schedulers.io())
+        );
+
+        movies.addSource(source, moviesResponseResource -> {
+            movies.setValue(moviesResponseResource);
+            movies.removeSource(source);
+        });
+
     }
 
 
