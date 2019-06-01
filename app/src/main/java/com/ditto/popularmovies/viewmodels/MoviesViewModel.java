@@ -73,5 +73,7 @@ public class MoviesViewModel extends ViewModel {
 
     }
 
-
+    public int getPageIndex() {
+        return pageIndex;
+    }
 }

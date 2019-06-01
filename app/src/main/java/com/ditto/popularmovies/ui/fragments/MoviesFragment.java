@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +17,10 @@ import com.bumptech.glide.RequestManager;
 import com.ditto.popularmovies.R;
 import com.ditto.popularmovies.models.Movie;
 import com.ditto.popularmovies.ui.adapters.MoviesRecyclerAdapter;
+import com.ditto.popularmovies.utlis.CommonUtils;
 import com.ditto.popularmovies.viewmodels.MoviesViewModel;
 import com.ditto.popularmovies.viewmodels.ViewModelProviderFactory;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ import java.util.List;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MoviesFragment extends BaseFragment {
 
@@ -46,6 +50,9 @@ public class MoviesFragment extends BaseFragment {
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
+    @BindView(R.id.group_no_internet_alert)
+    Group group_no_internet;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,7 +68,13 @@ public class MoviesFragment extends BaseFragment {
         viewModel = ViewModelProviders.of(this, providerFactory).get(MoviesViewModel.class);
         initRecyclerView();
         subscribeObervers();
-        viewModel.getMoreMovies();
+
+        if(CommonUtils.isNetworkAvailable(getContext())){
+            viewModel.getMoreMovies();
+        }
+        else {
+            showNoInternetAlertView(true);
+        }
     }
 
     private void subscribeObervers(){
@@ -88,11 +101,24 @@ public class MoviesFragment extends BaseFragment {
                     case ERROR:{
                         Log.e(TAG, "onChanged: ERROR..." + listResource.message );
                         showProgress(false);
+
+                        if(viewModel.getPageIndex() == 1) {
+                            showNoInternetAlertView(true);
+                        }
+                        else {
+                            adapter.setLoadingNextPage(false);
+                            adapter.notifyItemChanged(adapter.getLastItemIndex());
+                        }
+
                         break;
                     }
                 }
             }
         });
+    }
+
+    private void showNoInternetAlertView(boolean show){
+        group_no_internet.setVisibility(show?View.VISIBLE:View.GONE);
     }
 
     private void updateRecyclerAdapter(List<Movie> movies, int page, int totalPages) {
@@ -113,16 +139,21 @@ public class MoviesFragment extends BaseFragment {
                 }
             }
             adapter.setLoadingNextPage(false);
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(adapter.getLastItemIndex());
         }
 
         if(hasNextPage){
             adapter.setOnNextPageLoadListener(new MoviesRecyclerAdapter.OnNextPageLoadListener() {
                 @Override
                 public void onLoadingNextPage() {
-                    viewModel.getMoreMovies();
-                    adapter.setLoadingNextPage(true);
-                    doIn(() -> adapter.notifyItemChanged(adapter.getLastItemIndex()));
+                    if(CommonUtils.isNetworkAvailable(getContext())) {
+                        viewModel.getMoreMovies();
+                        adapter.setLoadingNextPage(true);
+                        doIn(() -> adapter.notifyItemChanged(adapter.getLastItemIndex()));
+                    }
+                    else {
+                        Snackbar.make(group_no_internet,getString(R.string.alert_no_internet),Snackbar.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -134,8 +165,6 @@ public class MoviesFragment extends BaseFragment {
 
     }
 
-
-
     private void showProgress(boolean show){
         progressBar.setVisibility(show?View.VISIBLE:View.GONE);
     }
@@ -146,6 +175,13 @@ public class MoviesFragment extends BaseFragment {
         recyclerView.setAdapter(adapter);
 
     }
+
+    @OnClick(R.id.bt_retry)
+    protected void onRetryClicked(View view){
+        showNoInternetAlertView(false);
+        viewModel.getMoreMovies();
+    }
+
 }
 
 
