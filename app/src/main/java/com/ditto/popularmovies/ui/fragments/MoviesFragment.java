@@ -121,7 +121,7 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
                             }
                         }
                         else {
-                            Toast.makeText(getContext(),getString(R.string.alert_invalid_api_key),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(),getString(R.string.alert_server_error),Toast.LENGTH_LONG).show();
                         }
 
                         break;
