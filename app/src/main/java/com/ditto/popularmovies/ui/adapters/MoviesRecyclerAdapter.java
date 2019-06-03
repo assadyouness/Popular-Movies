@@ -1,12 +1,12 @@
 package com.ditto.popularmovies.ui.adapters;
 
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.RequestManager;
 import com.ditto.popularmovies.R;
 import com.ditto.popularmovies.models.Movie;
 import com.ditto.popularmovies.ui.composites.EmptyViewHolder;
@@ -15,10 +15,13 @@ import com.ditto.popularmovies.ui.composites.RecyclerArrayAdapter;
 import com.ditto.popularmovies.ui.composites.RecyclerViewHolder;
 import com.ditto.popularmovies.utlis.CommonUtils;
 import com.ditto.popularmovies.utlis.Constants;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -31,9 +34,9 @@ public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<MoviesRecyclerAd
 
     private List<Movie> movies = new ArrayList<>();
 
-    private RequestManager requestManager;
-
     private OnNextPageLoadListener mOnNextPageLoadListener;
+    private OnMovieItemClickedListener onItemClickedListener;
+
     private boolean mLoadingNextPage = false;
     private boolean mLoadingEnabled = true;
 
@@ -47,12 +50,13 @@ public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<MoviesRecyclerAd
         }
     }
 
-    public MoviesRecyclerAdapter(Context context, RequestManager requestManager) {
+    public MoviesRecyclerAdapter(Context context) {
         super(context, new ArrayList<>());
-        this.requestManager = requestManager;
-
         setEndOffset(1);
+    }
 
+    public interface OnMovieItemClickedListener {
+        void onMovieItemClicked(Movie movie, ImageView imageView, TextView textView);
     }
 
     public static abstract class OnNextPageLoadListener {
@@ -61,6 +65,10 @@ public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<MoviesRecyclerAd
 
     public void setOnNextPageLoadListener(OnNextPageLoadListener l) {
         this.mOnNextPageLoadListener = l;
+    }
+
+    public void setOnItemClickedListener(OnMovieItemClickedListener onItemClickedListener) {
+        this.onItemClickedListener = onItemClickedListener;
     }
 
     @Override
@@ -146,7 +154,7 @@ public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<MoviesRecyclerAd
                 Movie movie = getMovies().get(position);
 
                 final MovieViewHolder movieViewHolder = (MovieViewHolder) holder;
-                movieViewHolder.bind(movie);
+                movieViewHolder.bind(movie,position);
                 break;
 
             case LoadingViewHolder.TYPE_LOAD_MORE:
@@ -176,16 +184,28 @@ public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<MoviesRecyclerAd
         @BindView(R.id.iv_image)
         ImageView iv_image;
 
+        Movie movie;
+
         MovieViewHolder(Context context, ViewGroup viewGroup, int viewType) {
             super(context, R.layout.listitem_movie, viewGroup, viewType, false);
             ButterKnife.bind(this, itemView);
 
         }
 
-        void bind(Movie movie) {
+        void bind(Movie movie, int position) {
+
+            iv_image.setTransitionName(mContext.getString(R.string.transition_image) + position);
+            tv_description.setTransitionName(mContext.getString(R.string.transition_text) + position);
+
+            this.movie = movie;
             tv_title.setText(movie.getTitle());
             tv_description.setText(movie.getOverview());
-            requestManager.load(CommonUtils.buildImageUrl(movie.getBackdropPath(), Constants.image_size5)).into(iv_image);
+            Picasso.get().load(CommonUtils.buildImageUrl(movie.getBackdropPath(), Constants.image_size5).toString()).into(iv_image);
+        }
+
+        @OnClick(R.id.card_view)
+        protected void onItemClicked(View view){
+            onItemClickedListener.onMovieItemClicked(movie,iv_image, tv_description);
         }
     }
 

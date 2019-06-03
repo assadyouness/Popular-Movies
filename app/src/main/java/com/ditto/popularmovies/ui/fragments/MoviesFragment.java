@@ -5,32 +5,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
+import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.RequestManager;
 import com.ditto.popularmovies.R;
 import com.ditto.popularmovies.models.Movie;
 import com.ditto.popularmovies.ui.adapters.MoviesRecyclerAdapter;
+import com.ditto.popularmovies.ui.adapters.MoviesRecyclerAdapter.OnMovieItemClickedListener;
 import com.ditto.popularmovies.utlis.CommonUtils;
 import com.ditto.popularmovies.viewmodels.MoviesViewModel;
 import com.ditto.popularmovies.viewmodels.ViewModelProviderFactory;
 import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MoviesFragment extends BaseFragment {
+public class MoviesFragment extends BaseFragment implements OnMovieItemClickedListener {
 
     private static final String TAG = "MoviesFragment";
 
@@ -40,9 +41,6 @@ public class MoviesFragment extends BaseFragment {
 
     @Inject
     ViewModelProviderFactory providerFactory;
-
-    @Inject
-    RequestManager requestManager;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -75,6 +73,13 @@ public class MoviesFragment extends BaseFragment {
         else {
             showNoInternetAlertView(true);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getCurrentActivity().showBackButton(false);
+        getCurrentActivity().setToolbarTitle(getString(R.string.app_name));
     }
 
     private void subscribeObervers(){
@@ -171,7 +176,10 @@ public class MoviesFragment extends BaseFragment {
 
     private void initRecyclerView(){
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new MoviesRecyclerAdapter(getContext(),requestManager);
+        if(adapter == null){
+            adapter = new MoviesRecyclerAdapter(getContext());
+        }
+        adapter.setOnItemClickedListener(this);
         recyclerView.setAdapter(adapter);
 
     }
@@ -180,6 +188,17 @@ public class MoviesFragment extends BaseFragment {
     protected void onRetryClicked(View view){
         showNoInternetAlertView(false);
         viewModel.getMoreMovies();
+    }
+
+    @Override
+    public void onMovieItemClicked(Movie movie, ImageView imageView, TextView textView) {
+
+        MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
+        movieDetailFragment.setMovie(movie);
+        movieDetailFragment.setTransitionImage(ViewCompat.getTransitionName(imageView));
+        movieDetailFragment.setTransitionText(ViewCompat.getTransitionName(textView));
+
+        pushFragment(movieDetailFragment,true,MovieDetailFragment.class.getName(),imageView,textView);
     }
 
 }

@@ -15,6 +15,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         addMoviesFragment();
+
     }
 
     private void addMoviesFragment() {
@@ -23,4 +24,5 @@ public class MainActivity extends BaseActivity {
         fragmentTransaction.replace(R.id.frameContainer, moviesFragment, MoviesFragment.class.getName());
         fragmentTransaction.commit();
     }
+
 }

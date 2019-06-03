@@ -6,4 +6,8 @@
 
     <string name="action_retry">Retry</string>
 
+
+    <string name="transition_image">imagetransition</string>
+    <string name="transition_text">texttransition</string>
+
 </resources>
