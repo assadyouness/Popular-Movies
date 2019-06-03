@@ -58,7 +58,7 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
-
+        
         ButterKnife.bind(this, view);
 
         return view;
@@ -73,7 +73,7 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
         if(CommonUtils.isNetworkAvailable(getContext())){
             viewModel.getMoreMovies();
         }
-        else {
+        else if(viewModel.getPageIndex() == 1){
             showNoInternetAlertView(true);
         }
     }
