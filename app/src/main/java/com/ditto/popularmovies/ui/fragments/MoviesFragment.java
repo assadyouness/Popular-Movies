@@ -80,6 +80,7 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
         super.onResume();
         getCurrentActivity().showBackButton(false);
         getCurrentActivity().setToolbarTitle(getString(R.string.app_name));
+        getCurrentActivity().setToolbarSubTitle("");
     }
 
     private void subscribeObervers(){

@@ -86,6 +86,7 @@ public class MovieDetailFragment extends BaseFragment {
         super.onResume();
         getCurrentActivity().showBackButton(true);
         getCurrentActivity().setToolbarTitle(movie.getTitle());
+        getCurrentActivity().setToolbarSubTitle(movie.getReleaseDate());
     }
 
     public void setMovie(Movie movie) {

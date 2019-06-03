@@ -44,6 +44,14 @@ public abstract class BaseActivity extends DaggerAppCompatActivity {
         }
     }
 
+    public void setToolbarSubTitle(String title){
+        ActionBar actionBar = getSupportActionBar();
+
+        if(actionBar != null){
+            actionBar.setSubtitle(title);
+        }
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
