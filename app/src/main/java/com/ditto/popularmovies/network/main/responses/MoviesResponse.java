@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MoviesResponse {
+public class MoviesResponse extends CommonResp
+{
 
     @Expose
     @SerializedName(("results"))
@@ -20,22 +21,12 @@ public class MoviesResponse {
     @SerializedName(("total_pages"))
     private int totalPages;
 
-    private boolean isError = false;
-
     public List<Movie> getMovies() {
         return movies;
     }
 
     public int getPage() {
         return page;
-    }
-
-    public void setError(boolean error) {
-        isError = error;
-    }
-
-    public boolean isError() {
-        return isError;
     }
 
     public int getTotalPages() {

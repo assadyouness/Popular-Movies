@@ -48,13 +48,14 @@ public class MoviesViewModel extends ViewModel {
                             Log.e(TAG, "apply: ", throwable);
                             MoviesResponse moviesResponse = new MoviesResponse();
                             moviesResponse.setError(true);
+                            moviesResponse.setThrowable(throwable);
                             return moviesResponse;
                         })
 
                         .map((Function<MoviesResponse, Resource<MoviesResponse>>) moviesResponse -> {
 
                             if (moviesResponse.isError()) {
-                                return Resource.error("Something went wrong", null);
+                                return Resource.error("Something went wrong", moviesResponse);
                             }
                             else {
                                 pageIndex++;

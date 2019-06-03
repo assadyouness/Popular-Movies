@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,8 @@ import com.ditto.popularmovies.utlis.CommonUtils;
 import com.ditto.popularmovies.viewmodels.MoviesViewModel;
 import com.ditto.popularmovies.viewmodels.ViewModelProviderFactory;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -108,12 +111,17 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
                         Log.e(TAG, "onChanged: ERROR..." + listResource.message );
                         showProgress(false);
 
-                        if(viewModel.getPageIndex() == 1) {
-                            showNoInternetAlertView(true);
+                        if(listResource.data != null && listResource.data.getThrowable() instanceof IOException){
+                            if(viewModel.getPageIndex() == 1) {
+                                showNoInternetAlertView(true);
+                            }
+                            else {
+                                adapter.setLoadingNextPage(false);
+                                adapter.notifyItemChanged(adapter.getLastItemIndex());
+                            }
                         }
                         else {
-                            adapter.setLoadingNextPage(false);
-                            adapter.notifyItemChanged(adapter.getLastItemIndex());
+                            Toast.makeText(getContext(),getString(R.string.alert_invalid_api_key),Toast.LENGTH_LONG).show();
                         }
 
                         break;

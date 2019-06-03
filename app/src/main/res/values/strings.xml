@@ -2,7 +2,8 @@
 
     <string name="app_name">Popular Movies</string>
 
-    <string name="alert_no_internet">Slow or no internet connection.  Check you connection and try again</string>
+    <string name="alert_no_internet">Slow or no internet connection.  Check your connection and try again</string>
+    <string name="alert_invalid_api_key">Invalid API Key</string>
 
     <string name="action_retry">Retry</string>
 

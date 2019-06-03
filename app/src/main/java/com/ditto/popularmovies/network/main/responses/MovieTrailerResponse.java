@@ -8,13 +8,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieTrailerResponse {
+public class MovieTrailerResponse extends CommonResp{
 
     @Expose
     @SerializedName(("videos"))
     private VideoPayload videoPayload;
-
-    private boolean isError = false;
 
     public class VideoPayload {
 
@@ -31,14 +29,6 @@ public class MovieTrailerResponse {
             return videoPayload.videos;
 
         return null;
-    }
-
-    public void setError(boolean error) {
-        isError = error;
-    }
-
-    public boolean isError() {
-        return isError;
     }
 
 }
