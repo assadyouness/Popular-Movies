@@ -54,6 +54,8 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
     @BindView(R.id.group_no_internet_alert)
     Group group_no_internet;
 
+    boolean isFirstPageShown = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
         initRecyclerView();
         subscribeObervers();
 
-        if(CommonUtils.isNetworkAvailable(getContext())){
+        if(!isFirstPageShown && CommonUtils.isNetworkAvailable(getContext())){
             viewModel.getMoreMovies();
         }
         else if(viewModel.getPageIndex() == 1){
@@ -142,15 +144,14 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
         final boolean hasNextPage = totalPages != page;
 
         if (page == 1) {
+            isFirstPageShown = true;
             adapter.setMovies(movies);
         } else if (size > 0) {
             // loading more -> with result
             Movie movie;
             for (int i = 0; i < size; i++) {
                 movie = movies.get(i);
-                if (!adapter.getMovies().contains(movie)) {
-                    adapter.insert(movie, adapter.getLastItemIndex());
-                }
+                adapter.insert(movie, adapter.getLastItemIndex());
             }
             adapter.setLoadingNextPage(false);
             adapter.notifyItemChanged(adapter.getLastItemIndex());

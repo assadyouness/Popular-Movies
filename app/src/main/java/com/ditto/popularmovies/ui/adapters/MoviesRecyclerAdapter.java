@@ -1,6 +1,7 @@
 package com.ditto.popularmovies.ui.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -82,6 +83,7 @@ public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<MoviesRecyclerAd
 
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
+        mDataSet.clear();
 
         for (int i = 0; i < movies.size(); i++) {
             mDataSet.add(new Item(i, (TYPE_MOVIE)));
