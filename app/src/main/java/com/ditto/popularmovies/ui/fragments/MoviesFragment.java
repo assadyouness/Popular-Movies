@@ -51,8 +51,6 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
     @BindView(R.id.group_no_internet_alert)
     Group group_no_internet;
 
-    private boolean isFirstPageShown = false;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -140,10 +138,6 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
 
         final int size = movies.size();
 
-        if (page == 1) {
-            isFirstPageShown = true;
-        }
-
         if (size > 0) {
             // loading more -> with result
             adapter.setMovies(movies);
@@ -189,7 +183,7 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
     }
 
     @OnClick(R.id.bt_retry)
-    protected void onRetryClicked(View view){
+    void onRetryClicked(View view){
         showNoInternetAlertView(false);
         viewModel.getMoreMovies();
     }

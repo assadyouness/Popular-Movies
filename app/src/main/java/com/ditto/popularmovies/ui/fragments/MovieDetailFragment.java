@@ -41,12 +41,12 @@ public class MovieDetailFragment extends BaseFragment {
     @BindView(R.id.tv_description)
     TextView tv_description;
 
-    Movie movie;
+    private Movie movie;
 
     private String transitionImage;
     private String transitionText;
 
-    String trailerId = "";
+    private String trailerId = "";
 
     @Inject
     ViewModelProviderFactory providerFactory;
@@ -109,18 +109,18 @@ public class MovieDetailFragment extends BaseFragment {
     }
 
     @OnClick(R.id.iv_image)
-    public void onPlayImageClicked(View view) {
+    void onPlayImageClicked(View view) {
         if (trailerId != null && !trailerId.equals("")) {
             Intent intent = YouTubeStandalonePlayer.createVideoIntent(getActivity(), Constants.Youtube_API_KEY, trailerId, 0, true, false);
             startActivity(intent);
         }
     }
 
-    public void setTransitionImage(String transitionImage) {
+    void setTransitionImage(String transitionImage) {
         this.transitionImage = transitionImage;
     }
 
-    public void setTransitionText(String transitionText) {
+    void setTransitionText(String transitionText) {
         this.transitionText = transitionText;
     }
 }
