@@ -16,7 +16,7 @@ public class MovieDetailViewModel extends ViewModel {
     private final MovieDetailRepository movieDetailRepository;
 
     @Inject
-    public MovieDetailViewModel(MovieDetailRepository movieDetailRepository) {
+    MovieDetailViewModel(MovieDetailRepository movieDetailRepository) {
         this.movieDetailRepository = movieDetailRepository;
     }
 
