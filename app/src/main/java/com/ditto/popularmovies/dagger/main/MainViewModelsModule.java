@@ -1,7 +1,7 @@
-package com.ditto.popularmovies.di.main;
+package com.ditto.popularmovies.dagger.main;
 
 import androidx.lifecycle.ViewModel;
-import com.ditto.popularmovies.di.ViewModelKey;
+import com.ditto.popularmovies.dagger.ViewModelKey;
 import com.ditto.popularmovies.viewmodels.MovieDetailViewModel;
 import com.ditto.popularmovies.viewmodels.MoviesViewModel;
 import dagger.Binds;

@@ -1,4 +1,4 @@
-package com.ditto.popularmovies.di;
+package com.ditto.popularmovies.dagger;
 
 import androidx.lifecycle.ViewModelProvider;
 

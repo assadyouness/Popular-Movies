@@ -1,4 +1,4 @@
-package com.ditto.popularmovies.di.main;
+package com.ditto.popularmovies.dagger.main;
 
 import com.ditto.popularmovies.ui.fragments.MovieDetailFragment;
 import com.ditto.popularmovies.ui.fragments.MoviesFragment;

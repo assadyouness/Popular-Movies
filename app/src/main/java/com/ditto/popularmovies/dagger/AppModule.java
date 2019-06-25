@@ -1,4 +1,4 @@
-package com.ditto.popularmovies.di;
+package com.ditto.popularmovies.dagger;
 
 import com.ditto.popularmovies.utlis.Constants;
 import javax.inject.Singleton;

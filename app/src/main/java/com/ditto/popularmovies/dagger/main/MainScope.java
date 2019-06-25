@@ -1,4 +1,4 @@
-package com.ditto.popularmovies.di.main;
+package com.ditto.popularmovies.dagger.main;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

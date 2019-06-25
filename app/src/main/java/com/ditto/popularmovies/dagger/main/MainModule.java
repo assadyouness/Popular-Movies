@@ -1,4 +1,4 @@
-package com.ditto.popularmovies.di.main;
+package com.ditto.popularmovies.dagger.main;
 
 import com.ditto.popularmovies.network.main.MainApi;
 import com.ditto.popularmovies.repositories.MovieDetailRepository;

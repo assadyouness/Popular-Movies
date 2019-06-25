@@ -1,9 +1,9 @@
-package com.ditto.popularmovies.di;
+package com.ditto.popularmovies.dagger;
 
-import com.ditto.popularmovies.di.main.MainFragmentBuildersModule;
-import com.ditto.popularmovies.di.main.MainModule;
-import com.ditto.popularmovies.di.main.MainScope;
-import com.ditto.popularmovies.di.main.MainViewModelsModule;
+import com.ditto.popularmovies.dagger.main.MainFragmentBuildersModule;
+import com.ditto.popularmovies.dagger.main.MainModule;
+import com.ditto.popularmovies.dagger.main.MainScope;
+import com.ditto.popularmovies.dagger.main.MainViewModelsModule;
 import com.ditto.popularmovies.ui.activities.MainActivity;
 
 import dagger.Module;
