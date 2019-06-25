@@ -2,7 +2,6 @@ package com.ditto.popularmovies.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,30 +93,10 @@ public class MovieDetailFragment extends BaseFragment {
     }
 
     private void subscribeObervers() {
-        viewModel.observeMovies().removeObservers(getViewLifecycleOwner());
-        viewModel.observeMovies().observe(getViewLifecycleOwner(), listResource -> {
+        viewModel.observeMovieTrailer().removeObservers(getViewLifecycleOwner());
+        viewModel.observeMovieTrailer().observe(getViewLifecycleOwner(), listResource -> {
             if (listResource != null) {
-                switch (listResource.status) {
-
-                    case LOADING: {
-                        Log.d(TAG, "onChanged: LOADING...");
-                        break;
-                    }
-
-                    case SUCCESS: {
-                        Log.d(TAG, "onChanged: got videos...");
-                        if (listResource.data != null) {
-                            showTrailer(listResource.data.getVideos());
-                        }
-                        break;
-                    }
-
-                    case ERROR: {
-                        Log.e(TAG, "onChanged: ERROR..." + listResource.message);
-
-                        break;
-                    }
-                }
+                showTrailer(listResource.getVideos());
             }
         });
     }

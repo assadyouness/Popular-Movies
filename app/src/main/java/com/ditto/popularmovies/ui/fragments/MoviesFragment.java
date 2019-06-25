@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
@@ -25,8 +24,6 @@ import com.ditto.popularmovies.utlis.CommonUtils;
 import com.ditto.popularmovies.viewmodels.MoviesViewModel;
 import com.ditto.popularmovies.viewmodels.ViewModelProviderFactory;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -54,7 +51,7 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
     @BindView(R.id.group_no_internet_alert)
     Group group_no_internet;
 
-    boolean isFirstPageShown = false;
+    private boolean isFirstPageShown = false;
 
     @Nullable
     @Override
@@ -71,13 +68,6 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
         viewModel = ViewModelProviders.of(this, providerFactory).get(MoviesViewModel.class);
         initRecyclerView();
         subscribeObervers();
-
-        if(!isFirstPageShown && CommonUtils.isNetworkAvailable(getContext())){
-            viewModel.getMoreMovies();
-        }
-        else if(viewModel.getPageIndex() == 1){
-            showNoInternetAlertView(true);
-        }
     }
 
     @Override
@@ -90,22 +80,30 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
 
     private void subscribeObervers(){
         viewModel.observeMovies().removeObservers(getViewLifecycleOwner());
-        viewModel.observeMovies().observe(getViewLifecycleOwner(), listResource -> {
+        viewModel.observeState().removeObservers(getViewLifecycleOwner());
+
+        viewModel.observeMovies().observe(getViewLifecycleOwner(), movies -> {
+            if(movies != null){
+                updateRecyclerAdapter(movies, viewModel.getPageIndex(), viewModel.hasNextPage());
+            }
+        });
+
+        viewModel.observeState().observe(getViewLifecycleOwner(), listResource -> {
             if(listResource != null){
                 switch (listResource.status){
 
                     case LOADING:{
                         Log.d(TAG, "onChanged: LOADING...");
-                        showProgress(true);
+                        if(viewModel.getPageIndex() == 1) {
+                            showProgress(true);
+                        }
                         break;
                     }
 
                     case SUCCESS:{
                         Log.d(TAG, "onChanged: got movies...");
                         showProgress(false);
-                        if (listResource.data != null) {
-                            updateRecyclerAdapter(listResource.data.getMovies(),listResource.data.getPage(),listResource.data.getTotalPages());
-                        }
+
                         break;
                     }
 
@@ -113,7 +111,7 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
                         Log.e(TAG, "onChanged: ERROR..." + listResource.message );
                         showProgress(false);
 
-                        if(listResource.data != null && listResource.data.getThrowable() instanceof IOException){
+                        if(listResource.isNetworkError()){
                             if(viewModel.getPageIndex() == 1) {
                                 showNoInternetAlertView(true);
                             }
@@ -137,22 +135,18 @@ public class MoviesFragment extends BaseFragment implements OnMovieItemClickedLi
         group_no_internet.setVisibility(show?View.VISIBLE:View.GONE);
     }
 
-    private void updateRecyclerAdapter(List<Movie> movies, int page, int totalPages) {
+    private void updateRecyclerAdapter(List<Movie> movies,int page, boolean hasNextPage) {
         movies = (movies == null ? new ArrayList<>() : movies);
 
         final int size = movies.size();
-        final boolean hasNextPage = totalPages != page;
 
         if (page == 1) {
             isFirstPageShown = true;
-            adapter.setMovies(movies);
-        } else if (size > 0) {
+        }
+
+        if (size > 0) {
             // loading more -> with result
-            Movie movie;
-            for (int i = 0; i < size; i++) {
-                movie = movies.get(i);
-                adapter.insert(movie, adapter.getLastItemIndex());
-            }
+            adapter.setMovies(movies);
             adapter.setLoadingNextPage(false);
             adapter.notifyItemChanged(adapter.getLastItemIndex());
         }

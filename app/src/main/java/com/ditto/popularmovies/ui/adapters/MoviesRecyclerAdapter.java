@@ -1,7 +1,6 @@
 package com.ditto.popularmovies.ui.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ditto.popularmovies.R;
+import com.ditto.popularmovies.models.Item;
 import com.ditto.popularmovies.models.Movie;
 import com.ditto.popularmovies.ui.composites.EmptyViewHolder;
 import com.ditto.popularmovies.ui.composites.LoadingViewHolder;
@@ -27,7 +27,7 @@ import butterknife.OnClick;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<MoviesRecyclerAdapter.Item, RecyclerView.ViewHolder> {
+public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<Item, RecyclerView.ViewHolder> {
 
     public static final String TAG = "MoviesRecyclerAdapter";
 
@@ -41,15 +41,6 @@ public class MoviesRecyclerAdapter extends RecyclerArrayAdapter<MoviesRecyclerAd
     private boolean mLoadingNextPage = false;
     private boolean mLoadingEnabled = true;
 
-    class Item {
-        int itemType;
-        int questIndex;
-
-        Item(int questIndex, int questType) {
-            this.questIndex = questIndex;
-            this.itemType = questType;
-        }
-    }
 
     public MoviesRecyclerAdapter(Context context) {
         super(context, new ArrayList<>());
