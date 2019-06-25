@@ -1,11 +1,7 @@
 package com.ditto.popularmovies.network.main;
 
-import com.ditto.popularmovies.models.Movie;
 import com.ditto.popularmovies.network.main.responses.MovieTrailerResponse;
 import com.ditto.popularmovies.network.main.responses.MoviesResponse;
-
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
