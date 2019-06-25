@@ -66,8 +66,6 @@ public class MoviesRepository {
                 else {
                     mMovies.setValue(moviesResponse.getMovies());
                 }
-
-
             }
 
             @Override

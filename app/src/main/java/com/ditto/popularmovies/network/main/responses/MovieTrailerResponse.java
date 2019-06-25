@@ -1,11 +1,8 @@
 package com.ditto.popularmovies.network.main.responses;
 
-import com.ditto.popularmovies.models.Movie;
 import com.ditto.popularmovies.models.Video;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class MovieTrailerResponse extends CommonResp{

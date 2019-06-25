@@ -23,7 +23,6 @@ public class MainModule {
         return new MoviesRepository(mainApi);
     }
 
-    @MainScope
     @Provides
     static MovieDetailRepository provideMovieDetailRepository(MainApi mainApi){
         return new MovieDetailRepository(mainApi);
